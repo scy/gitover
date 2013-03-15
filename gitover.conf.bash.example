@@ -1,0 +1,52 @@
+# Create a new application on Pushover (https://pushover.net/apps/build) and
+# then replace the question marks with the API token they tell you.
+APP_TOKEN='???'
+
+# The repositories to watch. This is a whitespace-separated list of entries.
+# Each entry is an equals-sign-separated list of three things:
+#   1. the identifier, which has to be a valid shell variable name (i.e. it's
+#      limited to A-Z, 0-9 and the underscore character)
+#   2. the title, which is a human-readable name and can be the same as the
+#      identifier; use ASCII characters except for the equals sign, of course
+#   3. the URL where the repository can be cloned from.
+REPOS='
+foo=foo Project=https://user:password@git.example.com/scm/foo/foo.git
+bar_ext=the BAR extension=git://git.example.net/bar-ext.git
+'
+
+# For each repository, there is a USERS and a WEB definition. The variables for
+# these are named USERS_id and WEB_id, where "id" is the identifier part from
+# the REPOS variable.
+
+# The USERS definition is a whitespace-separated list of entries. Each entry
+# contains two things, separated by an equals sign:
+#   1. the name, which will only be used for progress output on the command
+#      line, but since the USERS list is whitespace-separated, it cannot contain
+#      whitespace (and of course no equals sign as well)
+#   2. that user's Pushover user key, displayed on her or his dashboard.
+USERS_foo='
+Tim=08ybIiJsONyOK0mx4DCgRGCyRNbrST
+Amy=dhJxjlas8mKldI048FmcHdasie1fMe
+'
+
+# The WEB definition points to the web interface where details about the commit
+# can be viewed. This is currently mandatory, but you can enter nonsense here.
+# It is a pipe-separated list of three things:
+#   1. a name, which will be shown to the user in the Pushover notification, as
+#      "View on NAME"
+#   2. a general URL, which will be used if there is more than one commit; set
+#      this to the basic "here's all commits of the project" URL
+#   3. a specific URL, which will be used if there was only a single commit; set
+#      this to the "here's the details of that commit" URL. The special string
+#      "%H" (without the quotes, of course) will be replaced with the commit id.
+WEB_foo='Stash|https://git.example.com/projects/foo/repos/foo/commits|https://git.example.com/projects/foo/repos/foo/commits/%H'
+
+# And since this file is normal bash code, you can do all kinds of nifty things
+# in order to fill your variables.
+
+# The bar_ext users are the same as the foo users.
+USERS_bar_ext="$USERS_foo"
+
+# The bar_ext URLs are the same as the foo URLs, except that every occurence of
+# "foo" is to be replaced with "bar_ext".
+WEB_bar_ext="$(echo "$WEB_foo" | sed -e 's/foo/bar_ext/g')"
